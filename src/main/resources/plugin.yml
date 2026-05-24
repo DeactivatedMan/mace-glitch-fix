@@ -1,0 +1,10 @@
+name: mace-glitch-fix
+description: @description@
+version: '@version@'
+
+main: me.deac.maceGlitchFix.MaceGlitchFix
+api-version: '1.21'
+load: POSTWORLD
+
+authors: [ DeactivatedMan ]
+website: https://buymeacoffee.com/deactivatedman
