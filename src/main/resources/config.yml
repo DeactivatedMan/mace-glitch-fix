@@ -1,3 +1,5 @@
-y-subtraction: 1 # How many blocks below the player the block check is for, generally keep at 1
-log-cancels: true # If the plugin should log every mace cancel or not
-developer-mode: false # Allows for creation of ghost blocks. When bedrock is placed, the block 2 under it will become a ghost block
+y-subtraction: 1        # How many blocks below the player the block check is for, generally keep at 1
+log-cancels: true       # If the plugin should log every mace cancel or not
+cancel-fall-dmg: false  # If fall damage should be cancelled when a mace attack gets cancelled
+min-fall-distance: 5.0  # If a player falls from lower than this (in blocks), their attack will not be cancelled. Default of 5 should do
+developer-mode: false   # Allows for creation of ghost blocks. When bedrock is placed, the block 2 under it will become a ghost block

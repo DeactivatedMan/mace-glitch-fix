@@ -14,20 +14,36 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class MaceGlitchFix extends JavaPlugin implements Listener {
 
     public long ySubtraction;
+    public long minFallDist;
+
     public boolean logCancels;
+    public boolean cancelFall;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        getConfig().options().copyDefaults(true);
+        saveConfig();
+
         ySubtraction = getConfig().getLong("y-subtraction");
+        minFallDist = getConfig().getLong("min-fall-distance");
+
         logCancels = getConfig().getBoolean("log-cancels");
+        cancelFall = getConfig().getBoolean("cancel-fall-dmg");
+
+        boolean devMode = getConfig().getBoolean("developer-mode");
+
+        getLogger().info(
+                "Started with config:\n - ySubtraction: %s\n - minFallDist: %s\n - logCancels: %s\n - cancel fall: %s\n - dev mode: %s"
+                        .formatted(ySubtraction, minFallDist, logCancels, cancelFall, devMode)
+        );
 
         getServer().getPluginManager().registerEvents(this, this);
 
         // Creates a ghost block 2 blocks below every player placed piece of bedrock
         // I couldn't replicate the glitch the proper way, but this seems to work lol
         // Included like this for optimisation's sake
-        if (getConfig().getBoolean("developer-mode")) getServer().getPluginManager().registerEvent(
+        if (devMode) getServer().getPluginManager().registerEvent(
                 BlockPlaceEvent.class,
                 this,
                 EventPriority.NORMAL,
@@ -50,10 +66,19 @@ public final class MaceGlitchFix extends JavaPlugin implements Listener {
 
         Block blockBelow = attacker.getLocation().clone().subtract(0, ySubtraction,0).getBlock(); // Get block below
 
-        if (blockBelow.getType() != Material.AIR) { // If block below isn't air serverside
+        float fallDist = attacker.getFallDistance();
+        // If the block below isn't air AND fell from above the minimum
+        // Minimum check is to allow for use of mace without falling (ie on ground or just critting)
+        if (blockBelow.getType() != Material.AIR && fallDist > minFallDist) {
             event.setCancelled(true); // Cancel event, mace does no damage
-            attacker.sendBlockChange(blockBelow.getLocation(), blockBelow.getBlockData()); // Update block for player, added benefit of them dying to fall damage too!
-            if (logCancels) getLogger().info("Cancelled attack by " + attacker.getName() + " (uuid "+attacker.getUniqueId()+" )"); // Log the cancellation
+
+            if (cancelFall) attacker.setFallDistance(0); // Cancels fall damage
+            attacker.sendBlockChange(blockBelow.getLocation(), blockBelow.getBlockData()); // Update block for player
+
+            if (logCancels) getLogger().info( // Log the cancellation, using formatted now because it kinda looks cleaner
+                    "Cancelled attack by %s (uuid %s ) falling from %s / %s blocks"
+                            .formatted(attacker.getName(), attacker.getUniqueId(), fallDist, minFallDist)
+            );
         }
     }
 }
