@@ -17,7 +17,9 @@ public final class MaceGlitchFix extends JavaPlugin implements Listener {
     public long minFallDist;
 
     public boolean logCancels;
+
     public boolean cancelFall;
+    public boolean groundAttack;
 
     @Override
     public void onEnable() {
@@ -28,14 +30,16 @@ public final class MaceGlitchFix extends JavaPlugin implements Listener {
         ySubtraction = getConfig().getLong("y-subtraction");
         minFallDist = getConfig().getLong("min-fall-distance");
 
-        logCancels = getConfig().getBoolean("log-cancels");
         cancelFall = getConfig().getBoolean("cancel-fall-dmg");
+        groundAttack = getConfig().getBoolean("do-ground-attack");
+
+        logCancels = getConfig().getBoolean("log-cancels");
 
         boolean devMode = getConfig().getBoolean("developer-mode");
 
         getLogger().info(
-                "Started with config:\n - ySubtraction: %s\n - minFallDist: %s\n - logCancels: %s\n - cancel fall: %s\n - dev mode: %s"
-                        .formatted(ySubtraction, minFallDist, logCancels, cancelFall, devMode)
+                "Started with config:\n - ySubtraction: %s\n - minFallDist: %s\n - cancel fall: %s\n - do ground attack: %s\n - logCancels: %s\n - dev mode: %s"
+                        .formatted(ySubtraction, minFallDist, cancelFall, groundAttack, logCancels, devMode)
         );
 
         getServer().getPluginManager().registerEvents(this, this);
@@ -74,6 +78,7 @@ public final class MaceGlitchFix extends JavaPlugin implements Listener {
 
             if (cancelFall) attacker.setFallDistance(0); // Cancels fall damage
             attacker.sendBlockChange(blockBelow.getLocation(), blockBelow.getBlockData()); // Update block for player
+            if (groundAttack) attacker.attack(event.getEntity()); // Does another attack AFTER setting fall damage to 0
 
             if (logCancels) getLogger().info( // Log the cancellation, using formatted now because it kinda looks cleaner
                     "Cancelled attack by %s (uuid %s ) falling from %s / %s blocks"
