@@ -41,6 +41,7 @@ public final class MaceGlitchFix extends JavaPlugin implements Listener {
                 "Started with config:\n - ySubtraction: %s\n - minFallDist: %s\n - cancel fall: %s\n - do ground attack: %s\n - logCancels: %s\n - dev mode: %s"
                         .formatted(ySubtraction, minFallDist, cancelFall, groundAttack, logCancels, devMode)
         );
+        if (!cancelFall && groundAttack) getLogger().warning("do-ground-attack enabled but requires cancel-fall-dmg to be enabled to function.");
 
         getServer().getPluginManager().registerEvents(this, this);
 
