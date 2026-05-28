@@ -8,7 +8,11 @@ The moment that a player tries to damage anything with this exploit, it will be 
 ![Showcase of what happens in survival. The attack gets cancelled and the player dies to fall damage.](https://cdn.modrinth.com/data/4EbMD1LY/images/dd6c40d33a41c38b327ed4b7cd13d89becfe805a.gif)
 
 ## Config
-By default, any player trying to abuse this exploit will take the fall damage they would have in setting up once the attack gets cancelled, you can disable this by changing `cancel-fall-dmg` to true. Additionally, if you want each attempt to be logged, there is a config for that (being `log-cancels`).
+`min-fall-distance` - Players falling less than this (default 5) will be ignored   
+`cancel-fall-dmg` - If fall damage that the player would take in setting up should still be applied   
+`do-ground-attack` - Act as if the glitched attack was a regular on-ground attack   
+`log-cancels` - If the plugin should log each detected attack to console   
+`developer-mode` - Testing ONLY, read below
 
 ## Testing
 For testing purposes, I have left in a `developer-mode` toggle, which will make these ghost blocks easier for admins to replicate as this method doesn't require precise timing. All you have to do is place a piece of bedrock, and the block two down will become a ghost block provided that it was a solid block. Only leave this on for testing.
