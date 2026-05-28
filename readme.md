@@ -1,13 +1,14 @@
-## How it works
-This plugin fixes the exploit allowing players to keep their mace damage bonus by abusing ghost blocks.
+## What the glitch is
+With a small amount of redstone and good timing (or even just a mod), players can make their client not see a block. Serverside it's still there, but if the player were to walk onto it they would see themselves fall a fraction of a block and then teleport back up repeatedly. This somehow keeps your fall distance from resetting to 0 so you keep your mace damage bonus. To any other player it just looks like you're standing still, yet it can still one shot them and really any entity for that matter as long as they fell far enough.
 
-The moment that a player tries to damage anything with a mace with this exploit, it will be entirely cancelled with no damage dealt. Other than in v1.0, this will not affect regular mace use at all, if there are any false positives then make a [new issue here](https://github.com/DeactivatedMan/mace-glitch-fix/issues).
+## How the plugin works
+The moment that a player tries to damage anything with this exploit, it will be entirely cancelled with no damage dealt. Other than in **v1.0** which prevented use on the ground, this will not affect regular mace use at all, if there are any false positives then please make a [new issue on my GitHub](https://github.com/DeactivatedMan/mace-glitch-fix/issues).
 
 ## Showcase GIF
 ![Showcase of what happens in survival. The attack gets cancelled and the player dies to fall damage.](https://cdn.modrinth.com/data/4EbMD1LY/images/dd6c40d33a41c38b327ed4b7cd13d89becfe805a.gif)
 
 ## Config
-By default, any player trying to abuse this exploit will take the fall damage they would have previously after the attack gets cancelled, you can disable this by changing `cancel-fall-dmg` to true. If you want each attempt to be logged, there is also a config (this being `log-cancels`).
+By default, any player trying to abuse this exploit will take the fall damage they would have in setting up once the attack gets cancelled, you can disable this by changing `cancel-fall-dmg` to true. Additionally, if you want each attempt to be logged, there is a config for that (being `log-cancels`).
 
 ## Testing
-For testing purposes, I have left in a `developer-mode` toggle, which will make the creation of ghost blocks significantly easier. All you have to do is place a piece of bedrock, and two blocks under it will become a ghost block provided that it's a solid block.
+For testing purposes, I have left in a `developer-mode` toggle, which will make these ghost blocks easier for admins to replicate as this method doesn't require precise timing. All you have to do is place a piece of bedrock, and the block two down will become a ghost block provided that it was a solid block. Only leave this on for testing.
