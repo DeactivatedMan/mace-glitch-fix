@@ -1,3 +1,5 @@
+For the Fabric version, see **[this repo](https://github.com/DeactivatedMan/mace-glitch-fix-fabric)**
+
 ## What the glitch is
 With a small amount of redstone and good timing (or even just a mod), players can make their client not see a block. Serverside it's still there, but if the player were to walk onto it they would see themselves fall a fraction of a block and then teleport back up repeatedly. This somehow keeps your fall distance from resetting to 0 so you keep your mace damage bonus. To any other player it just looks like you're standing still, yet it can still one shot them and really any entity for that matter as long as they fell far enough.
 
