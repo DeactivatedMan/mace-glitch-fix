@@ -41,7 +41,7 @@ public final class MaceGlitchFix extends JavaPlugin implements Listener {
                 "Started with config:\n - ySubtraction: %s\n - minFallDist: %s\n - cancel fall: %s\n - do ground attack: %s\n - logCancels: %s\n - dev mode: %s"
                         .formatted(ySubtraction, minFallDist, cancelFall, groundAttack, logCancels, devMode)
         );
-        if (!cancelFall && groundAttack) getLogger().warning("do-ground-attack enabled but requires cancel-fall-dmg to be enabled to function.");
+        if (!cancelFall && groundAttack) getLogger().warning("do-ground-attack enabled but requires cancel-fall-dmg, will be force enabled.");
 
         getServer().getPluginManager().registerEvents(this, this);
 
@@ -77,7 +77,7 @@ public final class MaceGlitchFix extends JavaPlugin implements Listener {
         if (blockBelow.getType() != Material.AIR && fallDist > minFallDist) {
             event.setCancelled(true); // Cancel event, mace does no damage
 
-            if (cancelFall) attacker.setFallDistance(0); // Cancels fall damage
+            if (cancelFall || groundAttack) attacker.setFallDistance(0); // Cancels fall damage
             attacker.sendBlockChange(blockBelow.getLocation(), blockBelow.getBlockData()); // Update block for player
             if (groundAttack) attacker.attack(event.getEntity()); // Does another attack AFTER setting fall damage to 0
 
