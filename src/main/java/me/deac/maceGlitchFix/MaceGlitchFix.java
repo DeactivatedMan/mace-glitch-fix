@@ -38,8 +38,8 @@ public final class MaceGlitchFix extends JavaPlugin implements Listener {
         boolean devMode = getConfig().getBoolean("developer-mode");
 
         getLogger().info(
-                "Started with config:\n - ySubtraction: %s\n - minFallDist: %s\n - cancel fall: %s\n - do ground attack: %s\n - logCancels: %s\n - dev mode: %s"
-                        .formatted(ySubtraction, minFallDist, cancelFall, groundAttack, logCancels, devMode)
+            "Started with config:\n - ySubtraction: %s\n - minFallDist: %s\n - cancel fall: %s\n - do ground attack: %s\n - logCancels: %s\n - dev mode: %s"
+            .formatted(ySubtraction, minFallDist, cancelFall, groundAttack, logCancels, devMode)
         );
         if (!cancelFall && groundAttack) getLogger().warning("do-ground-attack enabled but requires cancel-fall-dmg, will be force enabled.");
 
@@ -49,18 +49,18 @@ public final class MaceGlitchFix extends JavaPlugin implements Listener {
         // I couldn't replicate the glitch the proper way, but this seems to work lol
         // Included like this for optimisation's sake
         if (devMode) getServer().getPluginManager().registerEvent(
-                BlockPlaceEvent.class,
-                this,
-                EventPriority.NORMAL,
-                (listener, event) -> {
-                    BlockPlaceEvent placeEvent = (BlockPlaceEvent) event;
+            BlockPlaceEvent.class,
+            this,
+            EventPriority.NORMAL,
+            (listener, event) -> {
+                BlockPlaceEvent placeEvent = (BlockPlaceEvent) event;
 
-                    Block block = placeEvent.getBlock();
-                    if (block.getType() != Material.BEDROCK) return;
-                    placeEvent.getPlayer().sendBlockChange(block.getLocation().subtract(0, 2, 0), Bukkit.createBlockData(Material.AIR));
-                    getLogger().info("Sent change for player" + placeEvent.getPlayer().name() + " at " + block.getLocation());
-                },
-                this
+                Block block = placeEvent.getBlock();
+                if (block.getType() != Material.BEDROCK) return;
+                placeEvent.getPlayer().sendBlockChange(block.getLocation().subtract(0, 2, 0), Bukkit.createBlockData(Material.AIR));
+                getLogger().info("Sent change for player" + placeEvent.getPlayer().name() + " at " + block.getLocation());
+            },
+            this
         );
     }
 
@@ -74,17 +74,18 @@ public final class MaceGlitchFix extends JavaPlugin implements Listener {
         float fallDist = attacker.getFallDistance();
         // If the block below isn't air AND fell from above the minimum
         // Minimum check is to allow for use of mace without falling (ie on ground or just critting)
-        if (blockBelow.getType() != Material.AIR && fallDist > minFallDist) {
-            event.setCancelled(true); // Cancel event, mace does no damage
+        if (blockBelow.getType().equals(Material.AIR) || fallDist < minFallDist) return;
 
-            if (cancelFall || groundAttack) attacker.setFallDistance(0); // Cancels fall damage
-            attacker.sendBlockChange(blockBelow.getLocation(), blockBelow.getBlockData()); // Update block for player
-            if (groundAttack) attacker.attack(event.getEntity()); // Does another attack AFTER setting fall damage to 0
+        //if (blockBelow.getType() != Material.AIR && fallDist > minFallDist) {}
+        event.setCancelled(true); // Cancel event, mace does no damage
 
-            if (logCancels) getLogger().info( // Log the cancellation, using formatted now because it kinda looks cleaner
-                    "Cancelled attack by %s (uuid %s ) falling from %s / %s blocks"
-                            .formatted(attacker.getName(), attacker.getUniqueId(), fallDist, minFallDist)
-            );
-        }
+        if (cancelFall || groundAttack) attacker.setFallDistance(0); // Cancels fall damage
+        attacker.sendBlockChange(blockBelow.getLocation(), blockBelow.getBlockData()); // Update block for player
+        if (groundAttack) attacker.attack(event.getEntity()); // Does another attack AFTER setting fall damage to 0
+
+        if (logCancels) getLogger().info( // Log the cancellation, using formatted now because it kinda looks cleaner
+            "Cancelled attack by %s (uuid %s ) falling from %s / %s blocks"
+            .formatted(attacker.getName(), attacker.getUniqueId(), fallDist, minFallDist)
+        );
     }
 }
